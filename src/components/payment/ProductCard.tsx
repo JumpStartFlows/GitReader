@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StripeProduct } from '../../stripe-config';
 import { stripeService } from '../../services/stripeService';
-import { CreditCard, Loader2 } from 'lucide-react';
+import { Heart, Loader2 } from 'lucide-react';
 
 interface ProductCardProps {
   product: StripeProduct;
@@ -18,7 +18,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     try {
       const { url } = await stripeService.createCheckoutSession({
         priceId: product.priceId,
-        mode: product.mode,
+        mode: 'payment',
       });
 
       if (url) {
@@ -50,14 +50,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <button
           onClick={handlePurchase}
           disabled={isLoading}
-          className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-blue-500 hover:bg-blue-600 disabled:bg-blue-400 text-white font-medium transition-colors duration-200 disabled:cursor-not-allowed"
+          className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-pink-500 hover:bg-pink-600 disabled:bg-pink-400 text-white font-medium transition-colors duration-200 disabled:cursor-not-allowed"
         >
           {isLoading ? (
             <Loader2 className="w-5 h-5 animate-spin" />
           ) : (
             <>
-              <CreditCard className="w-5 h-5" />
-              {product.mode === 'subscription' ? 'Subscribe' : 'Donate'}
+              <Heart className="w-5 h-5" />
+              Donate
             </>
           )}
         </button>

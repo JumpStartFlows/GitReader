@@ -5,15 +5,13 @@ import { RepoCard } from './RepoCard';
 import { Pagination } from './Pagination';
 import { LoadingSpinner } from './LoadingSpinner';
 import { ErrorMessage } from './ErrorMessage';
-import { UserMenu } from './UserMenu';
-import { AuthButton } from './AuthButton';
-import { useAuth } from './auth/AuthProvider';
+import { ProductCard } from './payment/ProductCard';
 import { githubApi } from '../services/githubApi';
 import { GitHubRepository, SearchSuggestion } from '../types/github';
-import { Github } from 'lucide-react';
+import { stripeProducts } from '../stripe-config';
+import { Github, Heart } from 'lucide-react';
 
 export const MainApp: React.FC = () => {
-  const { user } = useAuth();
   const [repositories, setRepositories] = useState<GitHubRepository[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -22,6 +20,7 @@ export const MainApp: React.FC = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [currentQuery, setCurrentQuery] = useState('');
   const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([]);
+  const [showDonation, setShowDonation] = useState(false);
 
   const perPage = 10;
 
@@ -104,7 +103,13 @@ export const MainApp: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900 transition-colors duration-300">
       <div className="fixed top-4 right-4 z-50 flex items-center gap-3">
-        {user ? <UserMenu /> : <AuthButton />}
+        <button
+          onClick={() => setShowDonation(true)}
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-pink-500 hover:bg-pink-600 text-white text-sm font-medium transition-colors duration-200"
+        >
+          <Heart className="w-4 h-4" />
+          Donate
+        </button>
         <ThemeToggle />
       </div>
       
@@ -208,6 +213,33 @@ export const MainApp: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Donation Modal */}
+      {showDonation && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="w-full max-w-md">
+            <div className="backdrop-blur-md bg-white/10 dark:bg-black/10 border border-white/20 dark:border-white/10 rounded-2xl p-6 shadow-xl">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                  Support GitReader
+                </h2>
+                <button
+                  onClick={() => setShowDonation(false)}
+                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                >
+                  ×
+                </button>
+              </div>
+              
+              <div className="space-y-4">
+                {stripeProducts.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
