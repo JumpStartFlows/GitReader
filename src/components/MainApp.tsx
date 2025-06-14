@@ -105,10 +105,10 @@ export const MainApp: React.FC = () => {
       <div className="fixed top-4 right-4 z-50 flex items-center gap-3">
         <button
           onClick={() => setShowDonation(true)}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-pink-500 hover:bg-pink-600 text-white text-sm font-medium transition-colors duration-200"
+          className="p-3 rounded-full backdrop-blur-md bg-white/10 dark:bg-black/10 border border-white/20 dark:border-white/10 hover:bg-white/20 dark:hover:bg-black/20 transition-all duration-300 shadow-lg text-gray-700 dark:text-gray-300"
+          aria-label="Donate"
         >
-          <Heart className="w-4 h-4" />
-          Donate
+          <Heart className="w-5 h-5" />
         </button>
         <ThemeToggle />
       </div>
