@@ -1,5 +1,5 @@
 import React from 'react';
-import { XCircle, ArrowLeft } from 'lucide-react';
+import { XCircle, ArrowLeft, Heart } from 'lucide-react';
 import { Link } from '../ui/Link';
 
 export const CancelPage: React.FC = () => {
@@ -12,13 +12,16 @@ export const CancelPage: React.FC = () => {
           </div>
           
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            Payment Cancelled
+            Donation Cancelled
           </h1>
           
-          <p className="text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
-            Your payment was cancelled. No charges were made to your account. 
-            You can try again anytime or continue exploring GitHub repositories.
-          </p>
+          <div className="mb-6">
+            <Heart className="w-6 h-6 text-gray-400 mx-auto mb-3" />
+            <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+              Your donation was cancelled. No charges were made to your account. 
+              You can try again anytime if you'd like to support GitReader and help keep the vibes flowing!
+            </p>
+          </div>
           
           <Link
             href="/"

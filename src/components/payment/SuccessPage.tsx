@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle, ArrowLeft } from 'lucide-react';
+import { CheckCircle, ArrowLeft, Heart } from 'lucide-react';
 import { Link } from '../ui/Link';
 
 export const SuccessPage: React.FC = () => {
@@ -12,13 +12,17 @@ export const SuccessPage: React.FC = () => {
           </div>
           
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            Payment Successful!
+            Thank You! ☕️
           </h1>
           
-          <p className="text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
-            Thank you for your support! Your payment has been processed successfully. 
-            You can now continue exploring GitHub repositories.
-          </p>
+          <div className="mb-6">
+            <Heart className="w-8 h-8 text-pink-500 mx-auto mb-3" />
+            <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+              Your donation has been processed successfully! Thank you for supporting GitReader 
+              and helping us keep the vibes flowing. Your contribution helps us maintain and 
+              improve the platform for everyone.
+            </p>
+          </div>
           
           <Link
             href="/"

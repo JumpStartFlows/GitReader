@@ -8,10 +8,10 @@ export interface StripeProduct {
 
 export const stripeProducts: StripeProduct[] = [
   {
-    id: 'prod_SV22oFHwwL6FWa',
-    priceId: 'price_1Ra1y6FyAcNX3QOkMGnmklSO',
+    id: 'prod_SV34FLTmITKAkP',
+    priceId: 'price_1Ra2yBFyAcNX3QOkVKjT3U9M',
     name: 'GitReader',
-    description: 'Donate a couple of tokens to keep the vibes flowing',
+    description: 'Donate a couple of tokens to keep the vibes flowing ☕️',
     mode: 'payment'
   }
 ];
