@@ -59,9 +59,12 @@ export const githubApi = {
 
       const data: ReadmeContent = await response.json();
       
-      // Decode base64 content
+      // Decode base64 content with proper UTF-8 handling
       if (data.encoding === 'base64') {
-        return atob(data.content.replace(/\n/g, ''));
+        const binaryString = atob(data.content.replace(/\n/g, ''));
+        const bytes = Uint8Array.from(binaryString, char => char.charCodeAt(0));
+        const decoder = new TextDecoder('utf-8');
+        return decoder.decode(bytes);
       }
       
       return data.content;
