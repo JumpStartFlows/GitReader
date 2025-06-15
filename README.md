@@ -1,3 +1,4 @@
+<meta property="og:image" content="https://raw.githubusercontent.com/JumpStartFlows/GitReader/main/images/thumbnail.png">
 # GitReader
 
 Discover and explore README files from GitHub repositories. Search by keywords, browse trending projects, and dive deep into documentation. Search for repositories by name, topic, or technology. Click on any repository to view its README file with full markdown rendering and syntax highlighting.
