@@ -81,7 +81,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onSearch, suggestions, isL
     <div className="relative w-full max-w-2xl mx-auto">
       <form onSubmit={handleSubmit} className="relative">
         <div className="relative">
-          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 w-5 h-5" />
           <input
             ref={inputRef}
             type="text"
@@ -94,7 +94,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onSearch, suggestions, isL
             onFocus={() => setShowSuggestions(true)}
             onKeyDown={handleKeyDown}
             placeholder="Search GitHub repositories..."
-            className="w-full pl-12 pr-12 py-4 text-lg rounded-2xl backdrop-blur-md bg-white/10 dark:bg-black/10 border border-white/20 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300"
+            className="w-full pl-12 pr-12 py-4 text-lg rounded-2xl bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-50 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-blue-400 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{
+              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+            }}
             disabled={isLoading}
           />
           {query && (
@@ -105,7 +108,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onSearch, suggestions, isL
                 setShowSuggestions(false);
                 inputRef.current?.focus();
               }}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+              aria-label="Clear search"
             >
               <X className="w-5 h-5" />
             </button>
@@ -116,19 +120,22 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onSearch, suggestions, isL
       {showSuggestions && filteredSuggestions.length > 0 && (
         <div
           ref={suggestionsRef}
-          className="absolute top-full left-0 right-0 mt-2 backdrop-blur-md bg-white/10 dark:bg-black/10 border border-white/20 dark:border-white/10 rounded-xl shadow-xl z-10 max-h-64 overflow-y-auto"
+          className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-600 rounded-xl shadow-xl z-10 max-h-64 overflow-y-auto"
+          style={{
+            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+          }}
         >
           {filteredSuggestions.map((suggestion, index) => (
             <button
               key={suggestion.query}
               onClick={() => handleSuggestionClick(suggestion.query)}
-              className={`w-full text-left px-4 py-3 hover:bg-white/10 dark:hover:bg-black/10 transition-colors first:rounded-t-xl last:rounded-b-xl ${
-                index === selectedIndex ? 'bg-white/10 dark:bg-black/10' : ''
+              className={`w-full text-left px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors first:rounded-t-xl last:rounded-b-xl border-b border-gray-100 dark:border-gray-700 last:border-b-0 ${
+                index === selectedIndex ? 'bg-gray-50 dark:bg-gray-700' : ''
               }`}
             >
               <div className="flex items-center justify-between">
-                <span className="text-gray-900 dark:text-white">{suggestion.query}</span>
-                <span className="text-xs text-gray-500 dark:text-gray-400 capitalize">
+                <span className="text-gray-900 dark:text-gray-50 font-medium">{suggestion.query}</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400 capitalize bg-gray-100 dark:bg-gray-600 px-2 py-1 rounded-full">
                   {suggestion.type}
                 </span>
               </div>
