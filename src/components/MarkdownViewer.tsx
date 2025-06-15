@@ -171,6 +171,11 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content }) => {
         .dark .code-scroll-container {
           scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1);
         }
+
+        /* Hide the horizontal scroll instruction text */
+        .code-block-header .scroll-instruction {
+          display: none !important;
+        }
       `}</style>
       
       <ReactMarkdown
@@ -191,8 +196,8 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content }) => {
             
             return !inline && (match || codeContent.includes('\n')) ? (
               <div className="relative w-full my-6 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
-                {/* Language label with detection indicator */}
-                <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 rounded-t-lg">
+                {/* Language label without scroll instruction */}
+                <div className="code-block-header flex items-center justify-between px-4 py-2 border-b border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 rounded-t-lg">
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide">
                       {finalLanguage}
@@ -208,9 +213,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content }) => {
                       </span>
                     )}
                   </div>
-                  <span className="text-xs text-gray-500 dark:text-gray-500">
-                    Scroll horizontally to view full content
-                  </span>
+                  {/* Removed the scroll instruction span */}
                 </div>
                 
                 {/* Scrollable code container */}
