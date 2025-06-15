@@ -3,6 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
 import { useTheme } from '../hooks/useTheme';
 
 interface MarkdownViewerProps {
@@ -176,10 +177,24 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content }) => {
         .code-block-header .scroll-instruction {
           display: none !important;
         }
+
+        /* Ensure HTML images are responsive and styled properly */
+        .prose img {
+          max-width: 100%;
+          height: auto;
+          border-radius: 0.5rem;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+          margin: 1rem 0;
+        }
+
+        .dark .prose img {
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+        }
       `}</style>
       
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
+        rehypePlugins={[rehypeRaw]}
         components={{
           code({ node, inline, className, children, ...props }) {
             // Extract language from className or detect from content
@@ -279,6 +294,21 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content }) => {
               </code>
             );
           },
+          img: ({ src, alt, ...props }) => (
+            <img
+              src={src}
+              alt={alt}
+              className="max-w-full h-auto rounded-lg shadow-md my-4"
+              style={{
+                display: 'block',
+                margin: '1rem auto',
+                maxWidth: '100%',
+                height: 'auto'
+              }}
+              loading="lazy"
+              {...props}
+            />
+          ),
           h1: ({ children }) => (
             <h1 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2">
               {children}
