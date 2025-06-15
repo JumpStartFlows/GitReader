@@ -41,13 +41,33 @@ export const RepoCard: React.FC<RepoCardProps> = ({ repo }) => {
   };
 
   return (
-    <div className="backdrop-blur-md bg-white/10 dark:bg-black/10 border border-white/20 dark:border-white/10 rounded-xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:bg-white/15 dark:hover:bg-black/15">
+    <div 
+      className="bg-white/95 dark:bg-gray-800/95 rounded-lg p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-white dark:hover:bg-gray-800"
+      style={{
+        border: '1px solid rgba(0,0,0,0.1)',
+        borderColor: 'rgba(0,0,0,0.1)',
+      }}
+      data-theme-border="light:rgba(0,0,0,0.1) dark:rgba(255,255,255,0.1)"
+    >
+      <style jsx>{`
+        [data-theme-border] {
+          border: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .dark [data-theme-border] {
+          border: 1px solid rgba(255,255,255,0.1);
+        }
+      `}</style>
+      
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center space-x-3 min-w-0 flex-1">
           <img
             src={repo.owner.avatar_url}
             alt={repo.owner.login}
-            className="w-10 h-10 rounded-full border-2 border-white/20 flex-shrink-0"
+            className="w-10 h-10 rounded-full flex-shrink-0"
+            style={{
+              border: '1px solid rgba(0,0,0,0.1)',
+            }}
           />
           <div className="min-w-0 flex-1">
             <a
@@ -68,7 +88,10 @@ export const RepoCard: React.FC<RepoCardProps> = ({ repo }) => {
         
         <button
           onClick={handleToggleReadme}
-          className="flex items-center gap-2 px-3 py-2 rounded-lg backdrop-blur-sm bg-white/10 dark:bg-black/10 border border-white/20 dark:border-white/10 hover:bg-white/20 dark:hover:bg-black/20 transition-all duration-200 text-sm font-medium text-gray-700 dark:text-gray-300 flex-shrink-0"
+          className="flex items-center gap-2 px-3 py-2 rounded-md bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-all duration-200 text-sm font-medium text-gray-700 dark:text-gray-300 flex-shrink-0"
+          style={{
+            border: '1px solid rgba(0,0,0,0.1)',
+          }}
           disabled={isLoadingReadme}
         >
           <FileText className="w-4 h-4" />
@@ -102,14 +125,24 @@ export const RepoCard: React.FC<RepoCardProps> = ({ repo }) => {
         </div>
         
         {repo.language && (
-          <span className="px-3 py-1 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-700">
+          <span 
+            className="px-3 py-1 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300"
+            style={{
+              border: '1px solid rgba(0,0,0,0.1)',
+            }}
+          >
             {repo.language}
           </span>
         )}
       </div>
 
       {showReadme && (
-        <div className="mt-6 pt-6 border-t border-white/20 dark:border-white/10 w-full overflow-hidden">
+        <div 
+          className="mt-6 pt-6 w-full overflow-hidden"
+          style={{
+            borderTop: '1px solid rgba(0,0,0,0.1)',
+          }}
+        >
           {isLoadingReadme ? (
             <div className="flex items-center justify-center py-8">
               <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
