@@ -145,7 +145,7 @@ export const MainApp: React.FC<MainAppProps> = ({ queryParams = {} }) => {
           <img 
             src={theme === 'light' ? boltLogoBlack : boltLogoWhite} 
             alt="Bolt Logo" 
-            className="w-5 h-5"
+            className="w-5 h-5 object-cover"
           />
         </button>
         <button
