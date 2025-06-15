@@ -153,7 +153,11 @@ export const RepoCard: React.FC<RepoCardProps> = ({ repo }) => {
             </div>
           ) : readme ? (
             <div className="w-full overflow-hidden">
-              <MarkdownViewer content={readme} />
+              <MarkdownViewer 
+                content={readme} 
+                owner={repo.owner.login}
+                repoName={repo.name}
+              />
             </div>
           ) : null}
         </div>

@@ -8,6 +8,8 @@ import { useTheme } from '../hooks/useTheme';
 
 interface MarkdownViewerProps {
   content: string;
+  owner?: string;
+  repoName?: string;
 }
 
 // Language mapping for common aliases and variations
@@ -124,7 +126,25 @@ const detectLanguageFromContent = (content: string): string => {
   return 'text';
 };
 
-export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content }) => {
+// Function to resolve relative image URLs to GitHub raw content URLs
+const resolveImageUrl = (src: string, owner?: string, repoName?: string): string => {
+  // If it's already an absolute URL, return as is
+  if (src.startsWith('http://') || src.startsWith('https://') || src.startsWith('//')) {
+    return src;
+  }
+  
+  // If we have owner and repo info, convert relative paths to GitHub raw URLs
+  if (owner && repoName && !src.startsWith('/')) {
+    // Remove leading './' if present
+    const cleanPath = src.replace(/^\.\//, '');
+    return `https://raw.githubusercontent.com/${owner}/${repoName}/main/${cleanPath}`;
+  }
+  
+  // For absolute paths or when we don't have repo info, return as is
+  return src;
+};
+
+export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, owner, repoName }) => {
   const { theme } = useTheme();
 
   return (
@@ -294,21 +314,30 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content }) => {
               </code>
             );
           },
-          img: ({ src, alt, ...props }) => (
-            <img
-              src={src}
-              alt={alt}
-              className="max-w-full h-auto rounded-lg shadow-md my-4"
-              style={{
-                display: 'block',
-                margin: '1rem auto',
-                maxWidth: '100%',
-                height: 'auto'
-              }}
-              loading="lazy"
-              {...props}
-            />
-          ),
+          img: ({ src, alt, ...props }) => {
+            const resolvedSrc = resolveImageUrl(src || '', owner, repoName);
+            
+            return (
+              <img
+                src={resolvedSrc}
+                alt={alt}
+                className="max-w-full h-auto rounded-lg shadow-md my-4"
+                style={{
+                  display: 'block',
+                  margin: '1rem auto',
+                  maxWidth: '100%',
+                  height: 'auto'
+                }}
+                loading="lazy"
+                onError={(e) => {
+                  console.error(`Failed to load image: ${resolvedSrc}`);
+                  console.log('Original src:', src);
+                  console.log('Owner:', owner, 'Repo:', repoName);
+                }}
+                {...props}
+              />
+            );
+          },
           h1: ({ children }) => (
             <h1 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2">
               {children}
