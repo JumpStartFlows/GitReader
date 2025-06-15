@@ -122,10 +122,15 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content }) => {
               </div>
             ) : (
               <code
-                className="px-2 py-1 rounded bg-gray-100 dark:bg-gray-800 text-sm font-mono text-gray-800 dark:text-gray-200"
+                className="px-2 py-1 rounded bg-gray-100 dark:bg-gray-800 text-sm font-mono text-gray-800 dark:text-gray-200 inline-block max-w-full"
                 style={{ 
                   fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace',
-                  fontSize: '0.875rem'
+                  fontSize: '0.875rem',
+                  wordBreak: 'break-all',
+                  overflowWrap: 'break-word',
+                  whiteSpace: 'pre-wrap',
+                  lineHeight: '1.4',
+                  hyphens: 'auto'
                 }}
                 {...props}
               >
@@ -158,7 +163,11 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content }) => {
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline transition-colors"
+              className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline transition-colors break-words"
+              style={{ 
+                wordBreak: 'break-all',
+                overflowWrap: 'break-word'
+              }}
             >
               {children}
             </a>
@@ -177,7 +186,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content }) => {
             <li className="list-disc">{children}</li>
           ),
           blockquote: ({ children }) => (
-            <blockquote className="border-l-4 border-gray-300 dark:border-gray-600 pl-4 italic text-gray-600 dark:text-gray-400 mb-4">
+            <blockquote className="border-l-4 border-gray-300 dark:border-gray-600 pl-4 italic text-gray-600 dark:text-gray-400 mb-4 break-words">
               {children}
             </blockquote>
           ),
