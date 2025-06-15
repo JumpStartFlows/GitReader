@@ -6,7 +6,6 @@ Discover and explore README files from GitHub repositories. Search by keywords, 
 
 ## Features
 - 🔍 **Search GitHub repositories** by name, topic, or technology
-- 📈 **Browse trending projects** from the past week
 - 📄 **View README files** with full markdown rendering and syntax highlighting
 - 🏷️ **Keyword suggestions** for popular and trending topics
 - 🌗 **Light/Dark mode** for comfortable reading
@@ -59,8 +58,8 @@ We welcome contributions from the community! If you have ideas for new features,
 1. **Fork the repository** on GitHub.
 2. **Clone your fork** locally:
    ```bash
-   git clone https://github.com/your-username/github-readme-search.git
-   cd github-readme-search
+   git clone https://github.com/JumpStartFlows/GitReader.git
+   cd GitReader
    ```
 3. **Create a new branch** for your feature or fix:
    ```bash
