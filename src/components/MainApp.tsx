@@ -9,7 +9,10 @@ import { ProductCard } from './payment/ProductCard';
 import { githubApi } from '../services/githubApi';
 import { GitHubRepository, SearchSuggestion } from '../types/github';
 import { stripeProducts } from '../stripe-config';
+import { useTheme } from '../hooks/useTheme';
 import { Github, Heart } from 'lucide-react';
+import boltLogoBlack from '../image/Black Circle 360x360 from Bolt Hackathon.png';
+import boltLogoWhite from '../image/White_circle_360x360.png';
 
 interface MainAppProps {
   queryParams?: Record<string, string>;
@@ -24,6 +27,7 @@ export const MainApp: React.FC<MainAppProps> = ({ queryParams = {} }) => {
   const [totalCount, setTotalCount] = useState(0);
   const [currentQuery, setCurrentQuery] = useState('');
   const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([]);
+  const { theme } = useTheme();
 
   // Modal state is now controlled by URL query parameters
   const showDonation = queryParams.modal === 'donation';
@@ -126,9 +130,24 @@ export const MainApp: React.FC<MainAppProps> = ({ queryParams = {} }) => {
     window.dispatchEvent(new PopStateEvent('popstate'));
   };
 
+  const handleBoltLogoClick = () => {
+    window.open('https://bolt.new', '_blank', 'noopener,noreferrer');
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900 transition-colors duration-300">
       <div className="fixed top-4 right-4 z-50 flex items-center gap-3">
+        <button
+          onClick={handleBoltLogoClick}
+          className="p-3 rounded-full backdrop-blur-md bg-white/10 dark:bg-black/10 border border-white/20 dark:border-white/10 hover:bg-white/20 dark:hover:bg-black/20 transition-all duration-300 shadow-lg"
+          aria-label="Visit Bolt.new"
+        >
+          <img 
+            src={theme === 'light' ? boltLogoBlack : boltLogoWhite} 
+            alt="Bolt Logo" 
+            className="w-5 h-5"
+          />
+        </button>
         <button
           onClick={handleOpenDonation}
           className="p-3 rounded-full backdrop-blur-md bg-white/10 dark:bg-black/10 border border-white/20 dark:border-white/10 hover:bg-white/20 dark:hover:bg-black/20 transition-all duration-300 shadow-lg text-gray-700 dark:text-gray-300"
