@@ -3,10 +3,13 @@ import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
 import { useTheme } from '../hooks/useTheme';
 
 interface MarkdownViewerProps {
   content: string;
+  owner?: string;
+  repoName?: string;
 }
 
 // Language mapping for common aliases and variations
@@ -123,7 +126,25 @@ const detectLanguageFromContent = (content: string): string => {
   return 'text';
 };
 
-export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content }) => {
+// Function to resolve relative image URLs to GitHub raw content URLs
+const resolveImageUrl = (src: string, owner?: string, repoName?: string): string => {
+  // If it's already an absolute URL, return as is
+  if (src.startsWith('http://') || src.startsWith('https://') || src.startsWith('//')) {
+    return src;
+  }
+  
+  // If we have owner and repo info, convert relative paths to GitHub raw URLs
+  if (owner && repoName && !src.startsWith('/')) {
+    // Remove leading './' if present
+    const cleanPath = src.replace(/^\.\//, '');
+    return `https://raw.githubusercontent.com/${owner}/${repoName}/main/${cleanPath}`;
+  }
+  
+  // For absolute paths or when we don't have repo info, return as is
+  return src;
+};
+
+export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content, owner, repoName }) => {
   const { theme } = useTheme();
 
   return (
@@ -171,10 +192,29 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content }) => {
         .dark .code-scroll-container {
           scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1);
         }
+
+        /* Hide the horizontal scroll instruction text */
+        .code-block-header .scroll-instruction {
+          display: none !important;
+        }
+
+        /* Ensure HTML images are responsive and styled properly */
+        .prose img {
+          max-width: 100%;
+          height: auto;
+          border-radius: 0.5rem;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+          margin: 1rem 0;
+        }
+
+        .dark .prose img {
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+        }
       `}</style>
       
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
+        rehypePlugins={[rehypeRaw]}
         components={{
           code({ node, inline, className, children, ...props }) {
             // Extract language from className or detect from content
@@ -191,8 +231,8 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content }) => {
             
             return !inline && (match || codeContent.includes('\n')) ? (
               <div className="relative w-full my-6 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
-                {/* Language label with detection indicator */}
-                <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 rounded-t-lg">
+                {/* Language label without scroll instruction */}
+                <div className="code-block-header flex items-center justify-between px-4 py-2 border-b border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 rounded-t-lg">
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide">
                       {finalLanguage}
@@ -208,9 +248,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content }) => {
                       </span>
                     )}
                   </div>
-                  <span className="text-xs text-gray-500 dark:text-gray-500">
-                    Scroll horizontally to view full content
-                  </span>
+                  {/* Removed the scroll instruction span */}
                 </div>
                 
                 {/* Scrollable code container */}
@@ -274,6 +312,30 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content }) => {
               >
                 {children}
               </code>
+            );
+          },
+          img: ({ src, alt, ...props }) => {
+            const resolvedSrc = resolveImageUrl(src || '', owner, repoName);
+            
+            return (
+              <img
+                src={resolvedSrc}
+                alt={alt}
+                className="max-w-full h-auto rounded-lg shadow-md my-4"
+                style={{
+                  display: 'block',
+                  margin: '1rem auto',
+                  maxWidth: '100%',
+                  height: 'auto'
+                }}
+                loading="lazy"
+                onError={(e) => {
+                  console.error(`Failed to load image: ${resolvedSrc}`);
+                  console.log('Original src:', src);
+                  console.log('Owner:', owner, 'Repo:', repoName);
+                }}
+                {...props}
+              />
             );
           },
           h1: ({ children }) => (
