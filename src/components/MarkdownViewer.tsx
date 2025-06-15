@@ -24,8 +24,11 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content }) => {
                 style={theme === 'dark' ? oneDark : oneLight}
                 language={match[1]}
                 PreTag="div"
-                className="rounded-lg !bg-opacity-50 backdrop-blur-sm overflow-x-auto"
+                className="rounded-lg !bg-opacity-50 backdrop-blur-sm"
                 wrapLongLines={true}
+                preTagProps={{
+                  className: "!whitespace-pre-wrap !overflow-x-auto"
+                }}
                 {...props}
               >
                 {String(children).replace(/\n$/, '')}
@@ -40,22 +43,22 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content }) => {
             );
           },
           h1: ({ children }) => (
-            <h1 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-50 border-b border-gray-200 dark:border-gray-700 pb-2">
+            <h1 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2">
               {children}
             </h1>
           ),
           h2: ({ children }) => (
-            <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-gray-50 border-b border-gray-200 dark:border-gray-700 pb-1">
+            <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-1">
               {children}
             </h2>
           ),
           h3: ({ children }) => (
-            <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-50">
+            <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">
               {children}
             </h3>
           ),
           p: ({ children }) => (
-            <p className="mb-4 text-gray-700 dark:text-gray-100 leading-relaxed">
+            <p className="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed">
               {children}
             </p>
           ),
@@ -64,18 +67,18 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content }) => {
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-200 underline transition-colors"
+              className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline transition-colors"
             >
               {children}
             </a>
           ),
           ul: ({ children }) => (
-            <ul className="mb-4 pl-6 space-y-1 text-gray-700 dark:text-gray-100">
+            <ul className="mb-4 pl-6 space-y-1 text-gray-700 dark:text-gray-300">
               {children}
             </ul>
           ),
           ol: ({ children }) => (
-            <ol className="mb-4 pl-6 space-y-1 text-gray-700 dark:text-gray-100">
+            <ol className="mb-4 pl-6 space-y-1 text-gray-700 dark:text-gray-300">
               {children}
             </ol>
           ),
@@ -83,7 +86,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content }) => {
             <li className="list-disc">{children}</li>
           ),
           blockquote: ({ children }) => (
-            <blockquote className="border-l-4 border-gray-300 dark:border-gray-600 pl-4 italic text-gray-600 dark:text-gray-200 mb-4">
+            <blockquote className="border-l-4 border-gray-300 dark:border-gray-600 pl-4 italic text-gray-600 dark:text-gray-400 mb-4">
               {children}
             </blockquote>
           ),
@@ -95,12 +98,12 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content }) => {
             </div>
           ),
           th: ({ children }) => (
-            <th className="px-4 py-2 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 text-left font-semibold text-gray-900 dark:text-gray-50">
+            <th className="px-4 py-2 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 text-left font-semibold text-gray-900 dark:text-white">
               {children}
             </th>
           ),
           td: ({ children }) => (
-            <td className="px-4 py-2 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-100">
+            <td className="px-4 py-2 border-b border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300">
               {children}
             </td>
           ),
