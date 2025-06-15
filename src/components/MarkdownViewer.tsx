@@ -9,6 +9,120 @@ interface MarkdownViewerProps {
   content: string;
 }
 
+// Language mapping for common aliases and variations
+const languageMap: Record<string, string> = {
+  'js': 'javascript',
+  'ts': 'typescript',
+  'py': 'python',
+  'rb': 'ruby',
+  'sh': 'bash',
+  'shell': 'bash',
+  'yml': 'yaml',
+  'md': 'markdown',
+  'cpp': 'cpp',
+  'c++': 'cpp',
+  'csharp': 'csharp',
+  'c#': 'csharp',
+  'cs': 'csharp',
+  'php': 'php',
+  'go': 'go',
+  'rust': 'rust',
+  'rs': 'rust',
+  'swift': 'swift',
+  'kotlin': 'kotlin',
+  'kt': 'kotlin',
+  'scala': 'scala',
+  'r': 'r',
+  'matlab': 'matlab',
+  'sql': 'sql',
+  'html': 'markup',
+  'xml': 'markup',
+  'css': 'css',
+  'scss': 'scss',
+  'sass': 'sass',
+  'less': 'less',
+  'json': 'json',
+  'dockerfile': 'docker',
+  'makefile': 'makefile',
+  'vim': 'vim',
+  'powershell': 'powershell',
+  'ps1': 'powershell',
+  'batch': 'batch',
+  'bat': 'batch'
+};
+
+// Function to normalize and validate language
+const normalizeLanguage = (lang: string): string => {
+  if (!lang) return 'text';
+  
+  const normalized = lang.toLowerCase().trim();
+  return languageMap[normalized] || normalized;
+};
+
+// Function to detect language from content if not specified
+const detectLanguageFromContent = (content: string): string => {
+  const trimmedContent = content.trim();
+  
+  // JavaScript/TypeScript patterns
+  if (/^(function|const|let|var|class|import|export)/m.test(trimmedContent) ||
+      /console\.(log|error|warn)/m.test(trimmedContent)) {
+    return 'javascript';
+  }
+  
+  // Python patterns
+  if (/^(def|class|import|from|if __name__|print\()/m.test(trimmedContent) ||
+      /^\s*#.*python/i.test(trimmedContent)) {
+    return 'python';
+  }
+  
+  // Java patterns
+  if (/^(public|private|protected)\s+(class|interface)/m.test(trimmedContent) ||
+      /System\.out\.println/m.test(trimmedContent)) {
+    return 'java';
+  }
+  
+  // C/C++ patterns
+  if (/#include\s*<.*>/m.test(trimmedContent) ||
+      /int\s+main\s*\(/m.test(trimmedContent)) {
+    return 'cpp';
+  }
+  
+  // HTML patterns
+  if (/<\/?[a-z][\s\S]*>/i.test(trimmedContent)) {
+    return 'markup';
+  }
+  
+  // CSS patterns
+  if (/\{[\s\S]*:[^}]*\}/m.test(trimmedContent) &&
+      !/^[\s]*[\w-]+\s*\(/m.test(trimmedContent)) {
+    return 'css';
+  }
+  
+  // JSON patterns
+  if (/^\s*[\{\[]/.test(trimmedContent) && 
+      /[\}\]]\s*$/.test(trimmedContent)) {
+    try {
+      JSON.parse(trimmedContent);
+      return 'json';
+    } catch {
+      // Not valid JSON
+    }
+  }
+  
+  // SQL patterns
+  if (/^(SELECT|INSERT|UPDATE|DELETE|CREATE|ALTER|DROP)\s+/im.test(trimmedContent)) {
+    return 'sql';
+  }
+  
+  // Shell/Bash patterns
+  if (/^#!/.test(trimmedContent) || 
+      /^\s*(echo|ls|cd|mkdir|rm|cp|mv|grep|awk|sed)\s+/m.test(trimmedContent)) {
+    return 'bash';
+  }
+  
+  return 'text';
+};
+
 export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content }) => {
   const { theme } = useTheme();
 
@@ -63,14 +177,37 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content }) => {
         remarkPlugins={[remarkGfm]}
         components={{
           code({ node, inline, className, children, ...props }) {
+            // Extract language from className or detect from content
             const match = /language-(\w+)/.exec(className || '');
-            return !inline && match ? (
+            const specifiedLanguage = match ? match[1] : '';
+            const codeContent = String(children).replace(/\n$/, '');
+            
+            // Normalize language or detect from content
+            const detectedLanguage = specifiedLanguage 
+              ? normalizeLanguage(specifiedLanguage)
+              : detectLanguageFromContent(codeContent);
+            
+            const finalLanguage = detectedLanguage || 'text';
+            
+            return !inline && (match || codeContent.includes('\n')) ? (
               <div className="relative w-full my-6 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
-                {/* Language label */}
+                {/* Language label with detection indicator */}
                 <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 rounded-t-lg">
-                  <span className="text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide">
-                    {match[1]}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+                      {finalLanguage}
+                    </span>
+                    {!specifiedLanguage && finalLanguage !== 'text' && (
+                      <span className="text-xs px-2 py-0.5 rounded bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
+                        Auto-detected
+                      </span>
+                    )}
+                    {finalLanguage === 'text' && !specifiedLanguage && (
+                      <span className="text-xs px-2 py-0.5 rounded bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400">
+                        No language specified
+                      </span>
+                    )}
+                  </div>
                   <span className="text-xs text-gray-500 dark:text-gray-500">
                     Scroll horizontally to view full content
                   </span>
@@ -80,7 +217,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content }) => {
                 <div 
                   className="code-scroll-container overflow-x-auto overflow-y-hidden"
                   role="region"
-                  aria-label={`Code block in ${match[1]} language`}
+                  aria-label={`Code block in ${finalLanguage} language`}
                   tabIndex={0}
                   style={{
                     maxWidth: '100%',
@@ -89,7 +226,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content }) => {
                 >
                   <SyntaxHighlighter
                     style={theme === 'dark' ? oneDark : oneLight}
-                    language={match[1]}
+                    language={finalLanguage}
                     PreTag="div"
                     customStyle={{
                       margin: 0,
@@ -114,9 +251,10 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content }) => {
                       }
                     }}
                     wrapLongLines={false}
+                    showLineNumbers={codeContent.split('\n').length > 5}
                     {...props}
                   >
-                    {String(children).replace(/\n$/, '')}
+                    {codeContent}
                   </SyntaxHighlighter>
                 </div>
               </div>
