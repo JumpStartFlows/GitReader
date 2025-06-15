@@ -24,14 +24,15 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content }) => {
                 style={theme === 'dark' ? oneDark : oneLight}
                 language={match[1]}
                 PreTag="div"
-                className="rounded-lg !bg-opacity-50 backdrop-blur-sm"
+                className="rounded-lg !bg-opacity-50 backdrop-blur-sm whitespace-pre-wrap overflow-x-auto"
+                wrapLongLines={true}
                 {...props}
               >
                 {String(children).replace(/\n$/, '')}
               </SyntaxHighlighter>
             ) : (
               <code
-                className="px-2 py-1 rounded bg-gray-100 dark:bg-gray-800 text-sm font-mono"
+                className="px-2 py-1 rounded bg-gray-100 dark:bg-gray-800 text-sm font-mono break-words"
                 {...props}
               >
                 {children}
