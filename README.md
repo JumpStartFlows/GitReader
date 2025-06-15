@@ -1,4 +1,4 @@
-![Thumbnail](images/thumbnail.png)
+![Thumbnail](/images/thumbnail.png)
 
 # GitReader
 
@@ -82,4 +82,4 @@ Thank you for helping make GitReader better!
 ## License
 [MIT](LICENSE)
 
-<meta property="og:image" content="https://raw.githubusercontent.com/JumpStartFlows/GitReader/main/images/thumbnail.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/JumpStartFlows/GitReader/main/public/images/thumbnail.png">
