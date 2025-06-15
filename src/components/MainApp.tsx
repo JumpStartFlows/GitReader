@@ -11,7 +11,11 @@ import { GitHubRepository, SearchSuggestion } from '../types/github';
 import { stripeProducts } from '../stripe-config';
 import { Github, Heart } from 'lucide-react';
 
-export const MainApp: React.FC = () => {
+interface MainAppProps {
+  queryParams?: Record<string, string>;
+}
+
+export const MainApp: React.FC<MainAppProps> = ({ queryParams = {} }) => {
   const [repositories, setRepositories] = useState<GitHubRepository[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -20,7 +24,9 @@ export const MainApp: React.FC = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [currentQuery, setCurrentQuery] = useState('');
   const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([]);
-  const [showDonation, setShowDonation] = useState(false);
+
+  // Modal state is now controlled by URL query parameters
+  const showDonation = queryParams.modal === 'donation';
 
   const perPage = 10;
 
@@ -100,11 +106,31 @@ export const MainApp: React.FC = () => {
     }
   };
 
+  const handleOpenDonation = () => {
+    // Add modal=donation query parameter to URL
+    const url = new URL(window.location.href);
+    url.searchParams.set('modal', 'donation');
+    window.history.pushState({}, '', url.toString());
+    
+    // Trigger popstate event to update router state
+    window.dispatchEvent(new PopStateEvent('popstate'));
+  };
+
+  const handleCloseDonation = () => {
+    // Remove modal query parameter from URL
+    const url = new URL(window.location.href);
+    url.searchParams.delete('modal');
+    window.history.replaceState({}, '', url.toString());
+    
+    // Trigger popstate event to update router state
+    window.dispatchEvent(new PopStateEvent('popstate'));
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900 transition-colors duration-300">
       <div className="fixed top-4 right-4 z-50 flex items-center gap-3">
         <button
-          onClick={() => setShowDonation(true)}
+          onClick={handleOpenDonation}
           className="p-3 rounded-full backdrop-blur-md bg-white/10 dark:bg-black/10 border border-white/20 dark:border-white/10 hover:bg-white/20 dark:hover:bg-black/20 transition-all duration-300 shadow-lg text-gray-700 dark:text-gray-300"
           aria-label="Donate"
         >
@@ -224,7 +250,7 @@ export const MainApp: React.FC = () => {
                   Support GitReader
                 </h2>
                 <button
-                  onClick={() => setShowDonation(false)}
+                  onClick={handleCloseDonation}
                   className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors text-xl font-medium w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
                   aria-label="Close donation modal"
                 >
