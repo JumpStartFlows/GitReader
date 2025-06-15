@@ -24,7 +24,7 @@ export const MarkdownViewer: React.FC<MarkdownViewerProps> = ({ content }) => {
                 style={theme === 'dark' ? oneDark : oneLight}
                 language={match[1]}
                 PreTag="div"
-                className="rounded-lg !bg-opacity-50 backdrop-blur-sm whitespace-pre-wrap overflow-x-auto"
+                className="rounded-lg !bg-opacity-50 backdrop-blur-sm overflow-x-auto"
                 wrapLongLines={true}
                 {...props}
               >
